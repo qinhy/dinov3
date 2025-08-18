@@ -18,7 +18,7 @@ from torch.utils.checkpoint import create_selective_checkpoint_contexts
 logger = logging.getLogger("dinov3")
 
 
-def map_modules_and_blocks(models: list[nn.Module], callable) -> None:
+def map_modules_and_blocks(models: List[nn.Module], callable) -> None:
     for m in models:
         for block_id, block in enumerate(m.blocks):
             m.blocks[block_id] = callable(block, is_backbone_block=True)

@@ -17,7 +17,7 @@ def job_context(
     logging_enabled: bool = True,
     seed: Optional[int] = 0,
     restrict_print_to_main_process: bool = True,
-    distributed_timeout: timedelta | None = None,
+    distributed_timeout: timedelta = None,
 ):
     setup_job(
         output_dir=output_dir,

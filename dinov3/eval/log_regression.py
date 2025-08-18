@@ -78,7 +78,7 @@ class TrainConfig:
 @dataclass
 class EvalConfig:
     test_dataset: str = MISSING  # test dataset path
-    batch_size: int | None = None  # use train.batch_size if None
+    batch_size: int= None  # use train.batch_size if None
     num_workers: int = 5
     test_metric_type: Optional[ClassificationMetricType] = None
 

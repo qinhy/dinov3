@@ -57,7 +57,7 @@ def linear_warmup_cosine_decay(
     end: float,
     warmup_iterations: int,
     total_iterations: int,
-    cosine_iterations: int | None = None,
+    cosine_iterations: int= None,
 ) -> np.ndarray:
     """
     Create a learning rate schedule with linear warmup, a cosine, and an optional constant part in the end.
@@ -68,7 +68,7 @@ def linear_warmup_cosine_decay(
         end (float): Final learning rate after cosine.
         warmup_iterations (int): Number of iterations for linear warmup.
         total_iterations (int): Total number of iterations for the schedule.
-        cosine_iterations (int | None): Number of iterations for cosine.
+        cosine_iterations (int): Number of iterations for cosine.
             If None, cosine part will be over remaining iterations after warmup.
     Returns:
         np.ndarray: Learning rate schedule as a numpy array.

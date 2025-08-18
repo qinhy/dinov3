@@ -54,7 +54,7 @@ def make_inference(
     stride: Optional[Tuple[int]] = None,
     apply_horizontal_flip: bool = False,
     num_max_forward: int = 1,
-    output_activation: Callable | None = None,
+    output_activation: Callable= None,
 ):
     """Make inference on a given image, and reverts horizontal flip TTA if applicable.
     If `inference_mode` = whole, one single prediction is made for the image.

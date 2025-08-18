@@ -4,11 +4,12 @@
 # the terms of the DINOv3 License Agreement.
 
 from dataclasses import dataclass
+from typing import List
 
 from .models.position_encoding import PositionEncoding
 
 
-@dataclass(kw_only=True)
+@dataclass()
 class DetectionHeadConfig:
     num_classes: int = 91  # 91 classes in COCO
     # Deformable DETR tricks
@@ -57,9 +58,9 @@ class DetectionHeadConfig:
     # Custom
     add_transformer_encoder: bool = True
     num_encoder_layers: int = 6
-    layers_to_use: list[int] | None = None
-    blocks_to_train: list[int] | None = None
+    layers_to_use: List[int]= None
+    blocks_to_train: List[int]= None
     n_windows_sqrt: int = 0
-    proposal_in_stride: int | None = None
-    proposal_tgt_strides: list[int] | None = None
+    proposal_in_stride: int= None
+    proposal_tgt_strides: List[int]= None
     backbone_use_layernorm: bool = False  # whether to use layernorm on each layer of the backbone's features

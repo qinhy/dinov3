@@ -63,7 +63,7 @@ class CheckpointRetentionPolicy(Enum):
         return set()
 
     @property
-    def max_to_keep(self) -> int | None:
+    def max_to_keep(self) -> int:
         """
         maximum "periodic" checkpoints to keep concurrently, ie. saved with `step` and not `save`. `None` for keep all
         """
@@ -77,7 +77,7 @@ def save_checkpoint(
     *,
     iteration: int | str,
     model: torch.nn.Module,
-    optimizer: torch.optim.Optimizer | None = None,
+    optimizer: torch.optim.Optimizer= None,
     overwrite: bool = True,
     process_group: dist.ProcessGroup = None,
     **others: Stateful,
@@ -136,11 +136,11 @@ def load_checkpoint(
     ckpt_dir: str | Path,  # output_dir/ckpt/199
     *,
     model: torch.nn.Module,
-    optimizer: torch.optim.Optimizer | None = None,
+    optimizer: torch.optim.Optimizer= None,
     strict_loading: bool = True,
     process_group: dist.ProcessGroup = None,
     **others: Stateful,
-) -> int | None:
+) -> int:
     """
     Load a plain/DDP/FSDP/FSDP2 model, its optimizer, an integer iteration and other stateful objects.
     Can you take a checkpoint saved on N ranks and load it on M ranks? Sure you can!
@@ -227,7 +227,7 @@ def find_all_checkpoints(ckpt_dir: Path | str) -> list[Path]:
     return checkpoints
 
 
-def find_latest_checkpoint(ckpt_dir: Path | str) -> Path | None:
+def find_latest_checkpoint(ckpt_dir: Path | str) -> Path:
     """Find the latest checkpoint in a directory, i.e. the subdir with the highest integer name."""
     checkpoints = find_all_checkpoints(ckpt_dir)
     if len(checkpoints) == 0:
@@ -235,7 +235,7 @@ def find_latest_checkpoint(ckpt_dir: Path | str) -> Path | None:
     return checkpoints[-1]
 
 
-def keep_last_n_checkpoints(ckpt_dir: Path | str, n: int | None):
+def keep_last_n_checkpoints(ckpt_dir: Path | str, n: int):
     """In a directory with integer-named subdirs, keep only the n subdirs with the highest number."""
     if n is None:
         return
@@ -268,8 +268,8 @@ def _is_int(s: str) -> bool:
 def init_fsdp_model_from_checkpoint(
     model: torch.nn.Module,
     checkpoint_path: str,
-    skip_load_prefixes: List[str] | None = None,
-    prefixes_not_sharded: List[str] | None = None,
+    skip_load_prefixes: List[str]= None,
+    prefixes_not_sharded: List[str]= None,
     process_group: dist.ProcessGroup = None,
 ):
     if not Path(checkpoint_path).is_dir():  # PyTorch standard checkpoint

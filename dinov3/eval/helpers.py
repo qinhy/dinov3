@@ -51,7 +51,7 @@ def args_dict_to_dataclass(eval_args: dict[str, object], config_dataclass, save_
     return OmegaConf.to_object(structured_config), output_dir
 
 
-def cli_parser(argv: list[str]) -> tuple[dict[str, Any]]:
+def cli_parser(argv: List[str]) -> tuple[dict[str, Any]]:
     """
     a method to parse argv and output a dict of eval arguments, and model building arguments.
     - `argv` can come from the command line directly, or from a subset of the command line arguments,

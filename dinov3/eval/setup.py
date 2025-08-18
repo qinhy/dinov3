@@ -18,9 +18,9 @@ from dinov3.models import build_model_for_eval
 class ModelConfig:
     # Loading a local file
     config_file: str
-    pretrained_weights: str | None = None
+    pretrained_weights: str= None
     # Loading a DINOv3 or v2 model from torch.hub
-    dino_hub: str | None = None
+    dino_hub: str= None
 
 
 class BaseModelContext(TypedDict):
@@ -64,10 +64,10 @@ def get_autocast_dtype(config):
 
 def setup_and_build_model(
     config_file: str,
-    pretrained_weights: str | None = None,
+    pretrained_weights: str= None,
     shard_unsharded_model: bool = False,
     output_dir: str = "",
-    opts: list | None = None,
+    opts: list= None,
     **ignored_kwargs,
 ) -> Tuple[nn.Module, BaseModelContext]:
     cudnn.benchmark = True

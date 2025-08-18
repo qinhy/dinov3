@@ -21,7 +21,7 @@ from dinov3.utils import utils
 logger = logging.getLogger("dinov3")
 
 
-def map_modules_and_blocks(models: list[nn.ModuleDict], callable) -> None:
+def map_modules_and_blocks(models: List[nn.ModuleDict], callable) -> None:
     for m in models:
         assert isinstance(m, nn.ModuleDict)
         for k in m.keys():

@@ -65,7 +65,7 @@ class TrainConfig:
 class EvalConfig:
     test_dataset: str = MISSING  # test dataset path
     test_metric_type: ClassificationMetricType = ClassificationMetricType.MEAN_ACCURACY
-    batch_size: int | None = None  # batch size for evaluation, None to use train batch size
+    batch_size: int= None  # batch size for evaluation, None to use train batch size
     num_workers: int = 5  # number of workers for evaluation
 
 

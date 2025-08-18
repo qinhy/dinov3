@@ -96,10 +96,10 @@ class TrainConfig:
     scheduler_type: SchedulerType = SchedulerType.COSINE_ANNEALING
     epochs: int = 10  # number of training epochs
     epoch_length: int = 1250  # length of an epoch in number of iterations
-    save_checkpoint_iterations: int | None = (
+    save_checkpoint_iterations: int= (
         None  # number of iterations between two checkpoint saves (default: one epoch)
     )
-    eval_period_iterations: int | None = None  # number of iterations between two evaluations (default: one epoch)
+    eval_period_iterations: int= None  # number of iterations between two evaluations (default: one epoch)
     checkpoint_retention_policy: CheckpointRetentionPolicy = CheckpointRetentionPolicy.NONE  # keep checkpoints or not
     resume: bool = True  # whether to resume from existing checkpoints
     classifier_fpath: Optional[str] = None  # path to a file containing pretrained linear classifiers

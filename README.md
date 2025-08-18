@@ -342,7 +342,7 @@ def get_img():
     image = Image.open(requests.get(url, stream=True).raw).convert("RGB")
     return image
 
-def make_transform(resize_size: int | list[int] = 768):
+def make_transform(resize_size: int | List[int] = 768):
     to_tensor = transforms.ToTensor()
     resize = transforms.Resize((resize_size, resize_size), antialias=True)
     normalize = transforms.Normalize(
@@ -444,7 +444,7 @@ def get_img():
     image = Image.open(requests.get(url, stream=True).raw).convert("RGB")
     return image
 
-def make_transform(resize_size: int | list[int] = 768):
+def make_transform(resize_size: int | List[int] = 768):
     to_tensor = transforms.ToTensor()
     resize = transforms.Resize((resize_size, resize_size), antialias=True)
     normalize = transforms.Normalize(

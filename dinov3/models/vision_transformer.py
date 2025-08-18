@@ -60,12 +60,12 @@ class DinoVisionTransformer(nn.Module):
         patch_size: int = 16,
         in_chans: int = 3,
         pos_embed_rope_base: float = 100.0,
-        pos_embed_rope_min_period: float | None = None,
-        pos_embed_rope_max_period: float | None = None,
+        pos_embed_rope_min_period: float= None,
+        pos_embed_rope_max_period: float= None,
         pos_embed_rope_normalize_coords: Literal["min", "max", "separate"] = "separate",
-        pos_embed_rope_shift_coords: float | None = None,
-        pos_embed_rope_jitter_coords: float | None = None,
-        pos_embed_rope_rescale_coords: float | None = None,
+        pos_embed_rope_shift_coords: float= None,
+        pos_embed_rope_jitter_coords: float= None,
+        pos_embed_rope_rescale_coords: float= None,
         pos_embed_rope_dtype: str = "bf16",
         embed_dim: int = 768,
         depth: int = 12,
@@ -73,7 +73,7 @@ class DinoVisionTransformer(nn.Module):
         ffn_ratio: float = 4.0,
         qkv_bias: bool = True,
         drop_path_rate: float = 0.0,
-        layerscale_init: float | None = None,
+        layerscale_init: float= None,
         norm_layer: str = "layernorm",
         ffn_layer: str = "mlp",
         ffn_bias: bool = True,
@@ -82,7 +82,7 @@ class DinoVisionTransformer(nn.Module):
         mask_k_bias: bool = False,
         untie_cls_and_patch_norms: bool = False,
         untie_global_and_local_cls_norm: bool = False,
-        device: Any | None = None,
+        device: Any= None,
         **ignored_kwargs,
     ):
         super().__init__()
@@ -256,7 +256,7 @@ class DinoVisionTransformer(nn.Module):
             )
         return output
 
-    def forward_features(self, x: Tensor | List[Tensor], masks: Optional[Tensor] = None) -> List[Dict[str, Tensor]]:
+    def forward_features(self, x:Union[Tensor , List[Tensor]], masks: Optional[Tensor] = None) -> List[Dict[str, Tensor]]:
         if isinstance(x, torch.Tensor):
             return self.forward_features_list([x], [masks])[0]
         else:
@@ -317,7 +317,7 @@ class DinoVisionTransformer(nn.Module):
         elif return_class_token and return_extra_tokens:
             return tuple(zip(outputs, class_tokens, extra_tokens))
 
-    def forward(self, *args, is_training: bool = False, **kwargs) -> List[Dict[str, Tensor]] | Tensor:
+    def forward(self, *args, is_training: bool = False, **kwargs) -> Union[List[Dict[str, Tensor]] , Tensor]:
         ret = self.forward_features(*args, **kwargs)
         if is_training:
             return ret

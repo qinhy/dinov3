@@ -24,7 +24,7 @@ logger = logging.getLogger("dinov3")
 @dataclass
 class DinoV3SetupArgs:
     config_file: str
-    pretrained_weights: str | None = None
+    pretrained_weights: str= None
     shard_unsharded_model: bool = False
     output_dir: str = ""
     opts: List[Any] = field(default_factory=lambda: [])
@@ -176,7 +176,7 @@ def setup_job(
     logging_enabled: bool = True,
     seed: Optional[int] = 0,
     restrict_print_to_main_process: bool = True,
-    distributed_timeout: timedelta | None = None,
+    distributed_timeout: timedelta = None,
 ):
     """
     Setup methods that should be done in every fairvit job

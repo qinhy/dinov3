@@ -46,7 +46,7 @@ class Tokenizer(SimpleTokenizer):
         return result
 
 
-def get_tokenizer(bpe_path_or_url: str) -> Tokenizer | None:
+def get_tokenizer(bpe_path_or_url: str) -> Tokenizer:
     import urllib
     from io import BytesIO
 

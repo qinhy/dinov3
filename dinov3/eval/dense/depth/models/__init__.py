@@ -3,6 +3,7 @@
 # This software may be used and distributed in accordance with
 # the terms of the DINOv3 License Agreement.
 
+from typing import List, Union
 import torch
 from dinov3.eval.dense.depth.utils import cast_to
 
@@ -81,7 +82,7 @@ class FeaturesToDepth(torch.nn.Module):
 
 
 def make_head(
-    embed_dims: int | list[int],
+    embed_dims: Union[int , List[int]],
     n_output_channels: int,
     use_batchnorm: bool = False,
     use_cls_token: bool = False,
@@ -133,7 +134,7 @@ class EncoderDecoder(torch.nn.Module):
 
 def build_depther(
     backbone: torch.nn.Module,
-    backbone_out_layers: list[int] | BackboneLayersSet,
+    backbone_out_layers: Union[List[int] , BackboneLayersSet],
     n_output_channels: int,
     use_backbone_norm: bool = False,
     use_batchnorm: bool = False,

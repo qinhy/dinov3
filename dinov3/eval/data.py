@@ -185,7 +185,7 @@ def split_train_val_datasets(train_dataset, split_percentage: float = 0.1, shuff
 def create_train_dataset_dict(
     train_dataset,
     few_shot_eval: bool = False,
-    few_shot_k_or_percent: float | None = None,
+    few_shot_k_or_percent: float= None,
     few_shot_n_tries: int = 1,
 ) -> dict[int, dict[int, Any]]:
     """

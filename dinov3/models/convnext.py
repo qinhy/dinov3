@@ -127,7 +127,7 @@ class ConvNeXt(nn.Module):
         dims (int): Feature dimension at each stage. Default: [96, 192, 384, 768]
         drop_path_rate (float): Stochastic depth rate. Default: 0.
         layer_scale_init_value (float): Init value for Layer Scale. Default: 1e-6.
-        patch_size (int | None): Pseudo patch size. Used to resize feature maps to those of a ViT with a given patch size. If None, no resizing is performed
+        patch_size (int): Pseudo patch size. Used to resize feature maps to those of a ViT with a given patch size. If None, no resizing is performed
     """
 
     def __init__(
@@ -139,7 +139,7 @@ class ConvNeXt(nn.Module):
         drop_path_rate: float = 0.0,
         layer_scale_init_value: float = 1e-6,
         # DINO arguments
-        patch_size: int | None = None,
+        patch_size: int= None,
         **ignored_kwargs,
     ):
         super().__init__()
@@ -204,7 +204,7 @@ class ConvNeXt(nn.Module):
             torch.nn.init.trunc_normal_(module.weight, std=0.02)
             nn.init.constant_(module.bias, 0)
 
-    def forward_features(self, x: Tensor | List[Tensor], masks: Optional[Tensor] = None) -> List[Dict[str, Tensor]]:
+    def forward_features(self, x:Union[Tensor , List[Tensor]], masks: Optional[Tensor] = None) -> List[Dict[str, Tensor]]:
         if isinstance(x, torch.Tensor):
             return self.forward_features_list([x], [masks])[0]
         else:

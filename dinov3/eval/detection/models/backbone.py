@@ -79,7 +79,7 @@ class DINOBackbone(nn.Module):
 
         xs = [torch.cat(xs, axis=1)]
 
-        out: list[NestedTensor] = []
+        out: List[NestedTensor] = []
         for x in xs:
             m = tensor_list.mask
             assert m is not None
