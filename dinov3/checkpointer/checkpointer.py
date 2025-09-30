@@ -30,7 +30,7 @@ import subprocess
 import tempfile
 from enum import Enum
 from pathlib import Path
-from typing import List, Sequence, Set
+from typing import List, Optional, Sequence, Set
 
 import torch
 import torch.distributed as dist
@@ -39,7 +39,7 @@ import torch.distributed.checkpoint.filesystem as dcpfs
 import torch.distributed.checkpoint.state_dict as dcpsd
 from torch.distributed.checkpoint.stateful import Stateful
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("dinov3")
 
 
 class CheckpointRetentionPolicy(Enum):
@@ -268,8 +268,8 @@ def _is_int(s: str) -> bool:
 def init_fsdp_model_from_checkpoint(
     model: torch.nn.Module,
     checkpoint_path: str,
-    skip_load_prefixes: List[str]= None,
-    prefixes_not_sharded: List[str]= None,
+    skip_load_prefixes: Optional[List[str]] = None,
+    prefixes_not_sharded: Optional[List[str]] = None,
     process_group: dist.ProcessGroup = None,
 ):
     if not Path(checkpoint_path).is_dir():  # PyTorch standard checkpoint
@@ -286,16 +286,19 @@ def init_fsdp_model_from_checkpoint(
         else:
             world_mesh = DeviceMesh.from_group(process_group, "cuda")
         chkpt = {
-            k: (
-                torch.distributed.tensor.distribute_tensor(v, world_mesh, src_data_rank=None)
-                if not k.startswith(pns)
-                else v
+            key: (
+                torch.distributed.tensor.distribute_tensor(tensor, world_mesh, src_data_rank=None)
+                if not any(key_not_sharded in key for key_not_sharded in keys_not_sharded)
+                else tensor
             )
-            for pns in prefixes_not_sharded
-            for k, v in chkpt.items()
+            for key, tensor in chkpt.items()
         }
         model.load_state_dict(
-            {k: v for k, v in chkpt.items() if not any(k.startswith(prefix) for prefix in skip_load_prefixes)}
+            {
+                key: tensor
+                for key, tensor in chkpt.items()
+                if not any(skip_load_key in key for skip_load_key in skip_load_keys)
+            }
         )
     else:  # DCP checkpoint
         load_checkpoint(ckpt_dir=checkpoint_path, model=model, process_group=process_group)

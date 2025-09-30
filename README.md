@@ -1,4 +1,8 @@
-🆕 [2025-08-14] :fire: DINOv3 backbones are now available in [Hugging Face Hub](https://huggingface.co/collections/facebook/dinov3-68924841bd6b561778e31009) and [supported](https://huggingface.co/docs/transformers/model_doc/dinov3) by the Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) library
+🆕 [2025-09-17] :fire: DINOv3 backbones are now supported by the [PyTorch Image Models / timm](https://github.com/huggingface/pytorch-image-models/) library starting with version [1.0.20](https://github.com/huggingface/pytorch-image-models/releases/tag/v1.0.20)
+
+[2025-08-29] DINOv3 backbones are [supported](https://huggingface.co/docs/transformers/model_doc/dinov3) by released versions of the Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) library starting with version [4.56.0](https://github.com/huggingface/transformers/releases/tag/v4.56.0)
+
+[2025-08-14] DINOv3 backbones are now available in [Hugging Face Hub](https://huggingface.co/collections/facebook/dinov3-68924841bd6b561778e31009) and [supported](https://huggingface.co/docs/transformers/model_doc/dinov3) by the [development](https://github.com/huggingface/transformers/) version of the Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) library
 
 # DINOv3 🦖🦖🦖
 
@@ -182,7 +186,7 @@ dinov3_vit7b16 = torch.hub.load(REPO_DIR, 'dinov3_vit7b16', source='local', weig
 
 ### Pretrained backbones (via Hugging Face [Transformers](https://huggingface.co/docs/transformers/))
 
-All the backbones are available in the the [DINOv3](https://huggingface.co/collections/facebook/dinov3-68924841bd6b561778e31009) collection on Hugging Face Hub and supported via the Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) library. Please refer to the corresponding documentation for usage, but below is a short example that demonstrates how to obtain an image embedding with either [Pipeline] or the [AutoModel] class.
+All the backbones are available in the [DINOv3](https://huggingface.co/collections/facebook/dinov3-68924841bd6b561778e31009) collection on Hugging Face Hub and supported via the Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) library (with released packages from version 4.56.0). Please refer to the corresponding documentation for usage, but below is a short example that demonstrates how to obtain an image embedding with either [Pipeline] or the [AutoModel] class.
 
 ```python
 from transformers import pipeline
@@ -241,15 +245,17 @@ For models using the LVD-1689M weights (pretrained on web images), please use th
 
 ```python
 import torchvision
+from torchvision.transforms import v2
 
-def make_transform(resize_size: int = 224):
-    to_tensor = transforms.ToTensor()
-    resize = transforms.Resize((resize_size, resize_size), antialias=True)
-    normalize = transforms.Normalize(
+def make_transform(resize_size: int = 256):
+    to_tensor = v2.ToImage()
+    resize = v2.Resize((resize_size, resize_size), antialias=True)
+    to_float = v2.ToDtype(torch.float32, scale=True)
+    normalize = v2.Normalize(
         mean=(0.485, 0.456, 0.406),
         std=(0.229, 0.224, 0.225),
     )
-    return transforms.Compose([to_tensor, resize, normalize])
+    return v2.Compose([to_tensor, resize, to_float, normalize])
 ```
 
 
@@ -258,15 +264,17 @@ For models using the SAT-493M weights (pretrained on satellite imagery), please 
 
 ```python
 import torchvision
+from torchvision.transforms import v2
 
-def make_transform(resize_size: int = 224):
-    to_tensor = transforms.ToTensor()
-    resize = transforms.Resize((resize_size, resize_size), antialias=True)
-    normalize = transforms.Normalize(
+def make_transform(resize_size: int = 256):
+    to_tensor = v2.ToImage()
+    resize = v2.Resize((resize_size, resize_size), antialias=True)
+    to_float = v2.ToDtype(torch.float32, scale=True)
+    normalize = v2.Normalize(
         mean=(0.430, 0.411, 0.296),
         std=(0.213, 0.156, 0.143),
     )
-    return transforms.Compose([to_tensor, resize, normalize])
+    return v2.Compose([to_tensor, resize, to_float, normalize])
 ```
 
 ### Pretrained heads - Image classification
@@ -332,7 +340,7 @@ Full example code of depther on an image
 ```python
 from PIL import Image
 import torch
-from torchvision import transforms
+from torchvision.transforms import v2
 import matplotlib.pyplot as plt
 from matplotlib import colormaps
 
@@ -342,14 +350,15 @@ def get_img():
     image = Image.open(requests.get(url, stream=True).raw).convert("RGB")
     return image
 
-def make_transform(resize_size: int | List[int] = 768):
-    to_tensor = transforms.ToTensor()
-    resize = transforms.Resize((resize_size, resize_size), antialias=True)
-    normalize = transforms.Normalize(
+def make_transform(resize_size: Union[List[int],int] = 768):
+    to_tensor = v2.ToImage()
+    resize = v2.Resize((resize_size, resize_size), antialias=True)
+    to_float = v2.ToDtype(torch.float32, scale=True)
+    normalize = v2.Normalize(
         mean=(0.485, 0.456, 0.406),
         std=(0.229, 0.224, 0.225),
     )
-    return transforms.Compose([to_tensor, resize, normalize])
+    return v2.Compose([to_tensor, resize, to_float, normalize])
 
 depther = torch.hub.load(REPO_DIR, 'dinov3_vit7b16_dd', source="local", weights=<DEPTHER/CHECKPOINT/URL/OR/PATH>, backbone_weights=<BACKBONE/CHECKPOINT/URL/OR/PATH>)
 
@@ -444,14 +453,15 @@ def get_img():
     image = Image.open(requests.get(url, stream=True).raw).convert("RGB")
     return image
 
-def make_transform(resize_size: int | List[int] = 768):
-    to_tensor = transforms.ToTensor()
-    resize = transforms.Resize((resize_size, resize_size), antialias=True)
-    normalize = transforms.Normalize(
+def make_transform(resize_size: Union[List[int],int] = 768):
+    to_tensor = v2.ToImage()
+    resize = v2.Resize((resize_size, resize_size), antialias=True)
+    to_float = v2.ToDtype(torch.float32, scale=True)
+    normalize = v2.Normalize(
         mean=(0.485, 0.456, 0.406),
         std=(0.229, 0.224, 0.225),
     )
-    return transforms.Compose([to_tensor, resize, normalize])
+    return v2.Compose([to_tensor, resize, to_float, normalize])
 
 segmentor = torch.hub.load(REPO_DIR, 'dinov3_vit7b16_ms', source="local", weights=<SEGMENTOR/CHECKPOINT/URL/OR/PATH>, backbone_weights=<BACKBONE/CHECKPOINT/URL/OR/PATH>)
 
