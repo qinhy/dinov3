@@ -268,8 +268,12 @@ class SSLMetaArch(nn.Module):
         distillation_cfg = OmegaConf.merge(default_cfg, distillation_cfg)
 
         assert distillation_cfg.ibot.separate_head is True
-        assert distillation_cfg.ibot.head_n_prototypes == self.cfg.ibot.head_n_prototypes
-        assert distillation_cfg.dino.head_n_prototypes == self.cfg.dino.head_n_prototypes
+        assert distillation_cfg.ibot.head_n_prototypes == self.cfg.ibot.head_n_prototypes, (
+            f"{distillation_cfg.ibot.head_n_prototypes} != {self.cfg.ibot.head_n_prototypes}"
+        )
+        assert distillation_cfg.dino.head_n_prototypes == self.cfg.dino.head_n_prototypes, (
+            f"{distillation_cfg.dino.head_n_prototypes} != {self.cfg.dino.head_n_prototypes}"
+        )
         assert distillation_cfg.student.patch_size == self.cfg.student.patch_size
 
         teacher_model_dict = dict()
@@ -339,6 +343,7 @@ class SSLMetaArch(nn.Module):
                     self.cfg.distillation.checkpoint_path,
                     skip_load_keys=["dino_loss.center", "ibot_patch_loss.center"],
                     keys_not_sharded=["backbone.rope_embed.periods", "qkv.bias_mask"],
+                    process_group=distributed.get_default_process_group(),
                 )
             else:
                 logger.info("Init teacher to distil from, used for testing purpose only")
