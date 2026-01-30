@@ -360,7 +360,7 @@ def eval_knn_with_model(*, model: torch.nn.Module, autocast_dtype, config: KnnEv
     return results_dict
 
 
-def benchmark_launcher(eval_args: dict[str, object]) -> dict[str, Any]:
+def benchmark_launcher(eval_args: Dict[str, object]) -> Dict[str, Any]:
     """Initialization of distributed and logging are preconditions for this method"""
     dataclass_config, output_dir = args_dict_to_dataclass(eval_args=eval_args, config_dataclass=KnnEvalConfig)
     model, model_context = load_model_and_context(dataclass_config.model, output_dir=output_dir)

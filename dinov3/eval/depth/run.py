@@ -69,7 +69,7 @@ def eval_depther_with_model(*, depther: torch.nn.Module, config: DepthConfig):
     return results_dict
 
 
-def benchmark_launcher(eval_args: dict[str, Any]) -> dict[str, Any]:
+def benchmark_launcher(eval_args: Dict[str, Any]) -> Dict[str, Any]:
     """Initialization of distributed and logging are preconditions for this method"""
     if "config" in eval_args:
         base_config_path = eval_args.pop("config")

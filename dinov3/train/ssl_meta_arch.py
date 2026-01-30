@@ -5,6 +5,7 @@
 
 import gc
 import logging
+from typing import Dict, Union
 from functools import partial
 
 import torch
@@ -354,7 +355,7 @@ class SSLMetaArch(nn.Module):
 
     def forward_backward(
         self, data, *, teacher_temp, iteration=0, **ignored_kwargs
-    ) -> tuple[Tensor, dict[str, float | Tensor]]:
+    ) -> tuple[Tensor, Dict[str, Union[float, Tensor]]]:
         del ignored_kwargs
         metrics_dict = {}
 
@@ -426,7 +427,7 @@ class SSLMetaArch(nn.Module):
         self.backprop_loss(loss_accumulator)
 
         # Return total weighted loss and a dict of metrics to log
-        return loss_accumulator, metrics_dict | loss_dict
+        return loss_accumulator, {**metrics_dict, **loss_dict}
 
     @torch.no_grad()
     def get_teacher_output(

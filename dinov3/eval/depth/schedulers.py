@@ -5,7 +5,7 @@
 
 from inspect import signature
 import math
-from typing import Any, Literal
+from typing import Any, Literal, Union
 
 import torch
 from packaging.version import Version
@@ -35,10 +35,10 @@ class WarmupOneCycleLR(torch_schedulers.LRScheduler):
         warmup_iters: int = 0,
         warmup_ratio: float = 0.0,  # XXX: warmup ratio to deprecate, previously defined in mmcv segmentation code
         pct_start: float = 0.295,
-        max_lr: float | list[float] | None = None,
+        max_lr: Union[float, List[float], None] = None,
         anneal_strategy: Literal["cos", "linear"] = "cos",
-        base_momentum: float | tuple[float, ...] = 0.85,
-        max_momentum: float | tuple[float, ...] = 0.95,
+        base_momentum: Union[float, tuple[float, ...]] = 0.85,
+        max_momentum: Union[float, tuple[float, ...]] = 0.95,
         div_factor: float = 25.0,
         final_div_factor: float = 1000.0,
         use_beta1: bool = True,
@@ -157,10 +157,10 @@ class WarmupMultiStepLR(torch_schedulers.LRScheduler):
         self,
         optimizer: Optimizer,
         total_steps: int = 0,
-        milestones: list[float] = [0.5, 0.9, 1.0],
+        milestones: List[float] = [0.5, 0.9, 1.0],
         gamma: float = 0.1,
         warmup_iters: int = 0,
-        max_lr: float | list[float] | None = None,
+        max_lr: Union[float, List[float], None] = None,
         last_epoch: int = -1,
     ):
         """
@@ -221,9 +221,9 @@ def build_scheduler(
     optimizer: Optimizer,
     lr: float,
     total_iter: int,
-    constructor_kwargs: dict[str, Any],
+    constructor_kwargs: Dict[str, Any],
 ):
-    _kwargs: dict[str, Any] = {}
+    _kwargs: Dict[str, Any] = {}
     _kwargs.update(**constructor_kwargs)
     constructor_fn = SCHEDULERS_DICT[scheduler_type]
     accepted_kwargs = signature(constructor_fn).parameters.keys()

@@ -4,7 +4,7 @@
 # the terms of the DINOv3 License Agreement.
 from dataclasses import dataclass, field
 from functools import partial
-from typing import Any
+from typing import Any, Dict
 
 from typing import List, Union
 import torch
@@ -23,7 +23,7 @@ class DecoderConfig:
     norm_strategy: str = (
         "linear"  # (choice: ["linear", "softmax", "sigmoid"]) activation used before normalization of depth-bin logits
     )
-    head_kwargs: dict[str, Any] = field(default_factory=dict)
+    head_kwargs: Dict[str, Any] = field(default_factory=dict)
     backbone_out_layers: Any = (
         BackboneLayersSet.FOUR_EVEN_INTERVALS  # One of BackboneLayersSet(Enum) or a list of indices e.g. [0, 1, 2, 3]
     )
@@ -238,7 +238,7 @@ def build_depther(
 def make_depther_from_config(
     backbone,
     config: DecoderConfig,
-    checkpoint_path: str | None = None,
+    checkpoint_path: Union[str, None] = None,
     autocast_dtype: torch.dtype = torch.float32,
 ) -> Depther:
     depther = build_depther(

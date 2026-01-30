@@ -115,7 +115,7 @@ def total_area_to_metrics(
         total_area_pred_label (torch.Tensor): The prediction histogram on all
             classes.
         total_area_label (torch.Tensor): The ground truth histogram on all classes.
-        metrics (list[str] | str): Metrics to be evaluated,
+        metrics (Union[list[str], str]): Metrics to be evaluated,
             can be 'mIoU', 'mDice', or 'mFscore'.
         beta (int): Parameter for computing F-score. Defaults to 1 (for computing F1-score).
     Returns:

@@ -91,7 +91,7 @@ def get_class_weight(class_weight):
     """Get class weight for loss function.
 
     Args:
-        class_weight (list[float] | str | None): If class_weight is a str,
+        class_weight (Union[list[float], str, None]): If class_weight is a str,
             take it as a file name and read from it.
     """
     if isinstance(class_weight, str):
@@ -143,10 +143,10 @@ class DiceLoss(nn.Module):
         reduction (str, optional): The method used to reduce the loss. Options
             are "none", "mean" and "sum". This parameter only works when
             per_image is True. Default: 'mean'.
-        class_weight (list[float] | str, optional): Weight of each class. If in
+        class_weight (Union[list[float], str], optional): Weight of each class. If in
             str format, read them from a file. Defaults to None.
         loss_weight (float, optional): Weight of the loss. Default to 1.0.
-        ignore_index (int | None): The label index to be ignored. Default: 255.
+        ignore_index (Union[int, None]): The label index to be ignored. Default: 255.
         loss_name (str, optional): Name of the loss item. If you want this loss
             item to be included into the backward graph, `loss_` must be the
             prefix of the name. Defaults to 'loss_dice'.

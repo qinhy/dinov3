@@ -5,7 +5,7 @@
 
 import logging
 from functools import lru_cache
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional, Union
 
 import numpy as np
 import torch
@@ -73,7 +73,7 @@ def get_num_classes(dataset) -> int:
     return int(labels.max() + 1)
 
 
-def create_class_indices_mapping(labels: torch.Tensor) -> dict[int, torch.Tensor]:
+def create_class_indices_mapping(labels: torch.Tensor) -> Dict[int, torch.Tensor]:
     """
     Efficiently creates a mapping between the labels and tensors containing
     the indices of all the dataset elements that share this label.
@@ -101,8 +101,8 @@ def _shuffle_dataset(dataset: torch.Tensor, seed: int = 0):
 
 
 def _subset_dataset_per_class(
-    class_indices_mapping: dict[int, torch.Tensor],
-    n_or_percent_per_class: int | float,
+    class_indices_mapping: Dict[int, torch.Tensor],
+    n_or_percent_per_class: Union[int, float],
     dataset_size: int,
     seed: int = 0,
     is_percent: bool = False,
@@ -127,8 +127,8 @@ def _subset_dataset_per_class(
 
 
 def _multilabel_rebalance_subset(
-    class_indices_mapping: dict[int, torch.Tensor],
-    n_or_percent_per_class: int | float,
+    class_indices_mapping: Dict[int, torch.Tensor],
+    n_or_percent_per_class: Union[int, float],
     labels: torch.Tensor,
     indices_bool: torch.Tensor,
     dataset_size: int,
@@ -187,7 +187,7 @@ def create_train_dataset_dict(
     few_shot_eval: bool = False,
     few_shot_k_or_percent: float= None,
     few_shot_n_tries: int = 1,
-) -> dict[int, dict[int, Any]]:
+) -> Dict[int, Dict[int, Any]]:
     """
     Randomly split a dataset for few-shot evaluation, with `few_shot_k_or_percent` being
     n elements or x% of a class. Produces a dict, which keys are number of random "tries"
@@ -203,7 +203,7 @@ def create_train_dataset_dict(
     assert few_shot_k_or_percent is not None
     train_labels = get_labels(train_dataset)
     class_indices_mapping = create_class_indices_mapping(train_labels)
-    train_dataset_dict: dict[int, Any] = {}
+    train_dataset_dict: Dict[int, Any] = {}
     is_percent = few_shot_k_or_percent < 1
     if not is_percent:
         few_shot_k_or_percent = int(few_shot_k_or_percent)
@@ -230,12 +230,12 @@ def create_train_dataset_dict(
 
 
 def extract_features_for_dataset_dict(
-    model, dataset_dict: dict[int, dict[int, Any]], batch_size: int, num_workers: int, gather_on_cpu=False
-) -> dict[int, dict[str, torch.Tensor]]:
+    model, dataset_dict: Dict[int, Dict[int, Any]], batch_size: int, num_workers: int, gather_on_cpu=False
+) -> Dict[int, Dict[str, torch.Tensor]]:
     """
     Extract features for each subset of dataset in the context of few-shot evaluations
     """
-    few_shot_data_dict: dict[int, dict[str, torch.Tensor]] = {}
+    few_shot_data_dict: Dict[int, Dict[str, torch.Tensor]] = {}
     for try_n, dataset in dataset_dict.items():
         features, labels = extract_features(model, dataset, batch_size, num_workers, gather_on_cpu=gather_on_cpu)
         few_shot_data_dict[try_n] = {"train_features": features, "train_labels": labels}

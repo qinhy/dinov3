@@ -146,7 +146,7 @@ class MultiLoss(nn.Module):
 
     def __init__(
         self,
-        dict_losses: dict[LossType, float],
+        dict_losses: Dict[LossType, float],
     ):
         super(MultiLoss, self).__init__()
         self.dict_losses = nn.ModuleDict({loss_type.name: loss_type.module() for loss_type in dict_losses.keys()})

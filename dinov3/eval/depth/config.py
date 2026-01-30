@@ -5,7 +5,7 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, Union
 
 from omegaconf import MISSING
 
@@ -42,7 +42,7 @@ class ResultExtension(Enum):
 class ResultConfig:
     save_results: bool = False
     extension: ResultExtension = ResultExtension.JPG
-    save_resolution: int | None = (
+    save_resolution: Union[int, None] = (
         None  # if set, the output result image is resized to have its smallest size set to save_resolution
     )
     overlay_alpha: float = 1.0  # if alpha == 1, masks are not overlaid on the original image
@@ -70,13 +70,13 @@ class OptimizerConfig:
 class SchedulerConfig:
     type: str = "WarmupOneCycleLR"
     total_iter: int = 38_400  # Total number of iterations for training
-    constructor_kwargs: dict[str, Any] = field(default_factory=dict)
+    constructor_kwargs: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
 class TrainTransformConfig:
     img_size: Any = None
-    random_crop: tuple[int, int] | None = None
+    random_crop: Union[tuple[int, int], None] = None
     brightness_range: tuple[float, float] = (0.9, 1.1)
     rotation_angle: float = 2.5  # max rotation angle
     fixed_crop: str = "FULL"
@@ -92,7 +92,7 @@ class EvalTransformConfig:
 
 @dataclass
 class TransformConfig:
-    train: TrainTransformConfig | None = None
+    train: Union[TrainTransformConfig, None] = None
     eval: EvalTransformConfig = field(default_factory=EvalTransformConfig)
     mean: tuple[float, float, float] = IMAGENET_DEFAULT_MEAN
     std: tuple[float, float, float] = IMAGENET_DEFAULT_STD
@@ -111,7 +111,7 @@ class EvalConfig:
 
 @dataclass
 class DepthConfig:
-    model: ModelConfig | None = None
+    model: Union[ModelConfig, None] = None
     bs: int = 2
     n_gpus: int = 8
     num_workers: int = 2
@@ -120,13 +120,13 @@ class DepthConfig:
     optimizer: OptimizerConfig = field(default_factory=OptimizerConfig)
     datasets: DatasetsConfig = field(default_factory=DatasetsConfig)
     decoder_head: DecoderConfig = field(default_factory=DecoderConfig)
-    model_dtype: Dtype | None = None
-    losses: dict[LossType, float] | None = None  # For example {SIGLOSS: 1.0, GRADIENT_LOG_LOSS: 0.0}
+    model_dtype: Union[Dtype, None] = None
+    losses: Union[Dict[LossType, float], None] = None  # For example {SIGLOSS: 1.0, GRADIENT_LOG_LOSS: 0.0}
     transforms: TransformConfig = field(default_factory=TransformConfig)
     eval: EvalConfig = field(default_factory=EvalConfig)
-    metrics: list[str] = field(default_factory=lambda: ["rmse", "abs_rel", "a1"])
+    metrics: List[str] = field(default_factory=lambda: ["rmse", "abs_rel", "a1"])
     result_config: ResultConfig = field(default_factory=ResultConfig)
-    load_from: str | None = None  # path to .pt checkpoint to resume training from
+    load_from: Union[str, None] = None  # path to .pt checkpoint to resume training from
     output_dir: str = ""
 
 

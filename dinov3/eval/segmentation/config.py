@@ -6,7 +6,7 @@
 from dataclasses import dataclass, field
 from enum import Enum
 from omegaconf import MISSING
-from typing import Any
+from typing import Any, Union
 
 import torch
 
@@ -44,7 +44,7 @@ class OptimizerConfig:
 class SchedulerConfig:
     type: str = "WarmupOneCycleLR"
     total_iter: int = 40_000  # Total number of iterations for training
-    constructor_kwargs: dict[str, Any] = field(default_factory=dict)
+    constructor_kwargs: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -75,8 +75,8 @@ class TrainConfig:
 @dataclass
 class TrainTransformConfig:
     img_size: Any = None
-    random_img_size_ratio_range: tuple[float] | None = None
-    crop_size: tuple[int] | None = None
+    random_img_size_ratio_range: Union[tuple[float], None] = None
+    crop_size: Union[tuple[int], None] = None
     flip_prob: float = 0.0
 
 
@@ -99,15 +99,15 @@ class EvalConfig:
     compute_metric_per_image: bool = False
     reduce_zero_label: bool = True  # For ADE20K, ignores 0 label (=background/unlabeled)
     mode: str = "slide"
-    crop_size: int | None = 512
-    stride: int | None = 341
+    crop_size: Union[int, None] = 512
+    stride: Union[int, None] = 341
     eval_interval: int = 40000
     use_tta: bool = False  # apply test-time augmentation at evaluation time
 
 
 @dataclass
 class SegmentationConfig:
-    model: ModelConfig | None = None  # config of the DINOv3 backbone
+    model: Union[ModelConfig, None] = None  # config of the DINOv3 backbone
     bs: int = 2
     n_gpus: int = 8
     num_workers: int = 6  # number of workers to use / GPU
@@ -122,5 +122,5 @@ class SegmentationConfig:
     train: TrainConfig = field(default_factory=TrainConfig)
     eval: EvalConfig = field(default_factory=EvalConfig)
     # Additional Parameters
-    output_dir: str | None = None
-    load_from: str | None = None  # path to .pt checkpoint to resume training from or evaluate from
+    output_dir: Union[str, None] = None
+    load_from: Union[str, None] = None  # path to .pt checkpoint to resume training from or evaluate from

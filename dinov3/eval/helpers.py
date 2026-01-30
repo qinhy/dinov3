@@ -28,7 +28,7 @@ def write_results(results_dict, output_dir, results_filename) -> None:
     results.save_from_dict(results_dict=results_dict, results_path=results_path)
 
 
-def args_dict_to_dataclass(eval_args: dict[str, object], config_dataclass, save_config: bool = True) -> tuple[Any, str]:
+def args_dict_to_dataclass(eval_args: Dict[str, object], config_dataclass, save_config: bool = True) -> tuple[Any, str]:
     """
     eval_args       :  arguments passed to create the eval config.
                        `CONFIG_FILE_KEY` is a reserved name to load a set of parameters from a config file.

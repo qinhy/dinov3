@@ -4,6 +4,7 @@
 # the terms of the DINOv3 License Agreement.
 
 import logging
+from typing import Dict, Union
 
 import torch
 from torch import Tensor
@@ -26,7 +27,7 @@ class MultiDistillationMetaArch(SSLMetaArch):
 
     def forward_backward(
         self, data, *, teacher_temp, iteration: int = 0, **ignored_kwargs
-    ) -> tuple[Tensor, dict[str, float | Tensor]]:
+    ) -> tuple[Tensor, Dict[str, Union[float, Tensor]]]:
         del ignored_kwargs
         metrics_dict = {}
 
@@ -103,7 +104,7 @@ class MultiDistillationMetaArch(SSLMetaArch):
         self.backprop_loss(loss_accumulator)
 
         # Return total weighted loss and a dict of metrics to log
-        return loss_accumulator, metrics_dict | loss_dict
+        return loss_accumulator, {**metrics_dict, **loss_dict}
 
     @torch.no_grad()
     def get_teacher_output(

@@ -4,6 +4,8 @@
 # the terms of the DINOv3 License Agreement.
 
 import logging
+from typing import Union
+
 import numpy as np
 
 import torch
@@ -13,9 +15,9 @@ logger = logging.getLogger("dinov3")
 
 
 def align_depth_least_square(
-    gt_arr: np.ndarray | torch.Tensor,
-    pred_arr: np.ndarray | torch.Tensor,
-    valid_mask_arr: np.ndarray | torch.Tensor,
+    gt_arr: Union[np.ndarray, torch.Tensor],
+    pred_arr: Union[np.ndarray, torch.Tensor],
+    valid_mask_arr: Union[np.ndarray, torch.Tensor],
     max_resolution=None,
 ):
     """
@@ -71,7 +73,7 @@ def align_depth_least_square(
     return aligned_pred, scale, shift
 
 
-def setup_model_ddp(model: torch.nn.Module, device: torch.device | int):
+def setup_model_ddp(model: torch.nn.Module, device: Union[torch.device, int]):
     model = DDP(model.to(device), device_ids=[device])
     logger.info(f"Model moved to rank {device}")
     return model

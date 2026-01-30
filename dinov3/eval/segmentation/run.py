@@ -34,7 +34,7 @@ def run_segmentation_with_dinov3(
     return train_segmentation(backbone=backbone, config=config)
 
 
-def benchmark_launcher(eval_args: dict[str, object]) -> dict[str, Any]:
+def benchmark_launcher(eval_args: Dict[str, object]) -> Dict[str, Any]:
     """Initialization of distributed and logging are preconditions for this method"""
     if "config" in eval_args:  # using a config yaml file, useful for training
         base_config_path = eval_args.pop("config")

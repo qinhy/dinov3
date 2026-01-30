@@ -314,7 +314,7 @@ class HorizontalFlipAug(torch.nn.Module):
         """Call function to apply test time augment transforms on results.
 
         Args:
-            img (PIL image | torch.Tensor | List[PIL image]): Data to transform.
+            img (Union[PIL image, torch.Tensor, List[PIL image]]): Data to transform.
 
         Returns:
             list: A list of augmented data.

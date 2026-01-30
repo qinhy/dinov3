@@ -5,7 +5,7 @@
 
 import logging
 from functools import partial
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import torch
 import torch.distributed as dist
@@ -91,12 +91,12 @@ def fsdp_convnext(fsdp_config: Dict[str, Any], model: nn.Module):
     assert isinstance(stages, nn.ModuleList)
     # FSDP wrap at stage level
     for stage_id, stage in enumerate(stages):
-        stage_reshard: int | bool = True
+        stage_reshard: Union[int, bool] = True
         stages[stage_id] = fully_shard(stage, **fsdp_config, reshard_after_forward=stage_reshard)
     downsample_layers = model.downsample_layers
     assert isinstance(downsample_layers, nn.ModuleList)
     for dsl_id, dsl in enumerate(downsample_layers):
-        dsl_reshard: int | bool = True
+        dsl_reshard: Union[int, bool] = True
         downsample_layers[dsl_id] = fully_shard(dsl, **fsdp_config, reshard_after_forward=dsl_reshard)
     dsl: FSDPState
     stage: FSDPState
@@ -112,7 +112,7 @@ def fsdp_transformer(fsdp_config: Dict[str, Any], model: nn.Module):
     blocks = model.blocks
     assert isinstance(blocks, nn.ModuleList)
     for block_id, block in enumerate(blocks):
-        block_reshard: int | bool = True
+        block_reshard: Union[int, bool] = True
         blocks[block_id] = fully_shard(block, **fsdp_config, reshard_after_forward=block_reshard)
     prev_block: FSDPState
     next_block: FSDPState
@@ -127,8 +127,8 @@ def ac_compile_parallelize(
     trained_model: nn.ModuleDict,
     inference_only_models: List[nn.ModuleDict],
     cfg: Any,
-    trained_model_process_group: dist.ProcessGroup | None = None,
-    inference_only_models_process_groups: List[dist.ProcessGroup] | None = None,
+    trained_model_process_group: Union[dist.ProcessGroup, None] = None,
+    inference_only_models_process_groups: Union[List[dist.ProcessGroup], None] = None,
 ) -> None:
     """
     Order of the wrappers:

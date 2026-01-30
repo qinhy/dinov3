@@ -73,7 +73,7 @@ def evaluate_depther_with_dataloader(
     dataloader: torch.utils.data.DataLoader,
     depther: torch.nn.Module,
     device: Any,
-    metrics: list[_DepthMetric],
+    metrics: List[_DepthMetric],
     eval_range: tuple[float, float],
     result_config: ResultConfig,
     save_dir="",
@@ -102,7 +102,7 @@ def evaluate_depther_with_dataloader(
     """
 
     metric_names = [metric.name for metric in metrics]
-    all_metric_values_dict: dict[str, Any] = {metric: [] for metric in metric_names}
+    all_metric_values_dict: Dict[str, Any] = {metric: [] for metric in metric_names}
     all_metric_values_dict["indices"] = []
     final_metric_values_dict = {}
 
@@ -111,7 +111,7 @@ def evaluate_depther_with_dataloader(
     # build a metric_logger for validation
     header = "Validation: "
     metric_logger = MetricLogger(delimiter="  ")
-    all_losses: dict[str, list[float]] = {}
+    all_losses: Dict[str, List[float]] = {}
     if use_tta:
         hook = depther.register_forward_hook(inverse_tta_hook(LeftRightFlipAug(flip=True)))
     else:

@@ -41,7 +41,7 @@ class LinearHead(nn.Module):
     def _transform_inputs(self, inputs):
         """Transform inputs for decoder.
         Args:
-            inputs (list[Tensor]): List of multi-level img features.
+            inputs (List[Tensor]): List of multi-level img features.
         Returns:
             Tensor: The transformed inputs
         """
@@ -62,7 +62,7 @@ class LinearHead(nn.Module):
         """Forward function for feature maps before classifying each pixel with
         ``self.cls_seg`` fc.
         Args:
-            inputs (list[Tensor]): List of multi-level img features.
+            inputs (List[Tensor]): List of multi-level img features.
         Returns:
             feats (Tensor): A tensor of shape (batch_size, self.channels,
                 H, W) which is feature map for last layer of decoder head.

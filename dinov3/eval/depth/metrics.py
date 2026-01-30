@@ -4,6 +4,7 @@
 # the terms of the DINOv3 License Agreement.
 
 import math
+from typing import Union
 from collections import namedtuple
 from dataclasses import dataclass
 
@@ -45,8 +46,8 @@ _DepthMetricValues = namedtuple("DepthMetricValues", [metric.name for metric in 
 def calculate_depth_metrics(
     gt: torch.Tensor,
     pred: torch.Tensor,
-    valid_mask: torch.Tensor | None = None,
-    list_metrics: list[_DepthMetric] = list(DEPTH_METRICS),
+    valid_mask: Union[torch.Tensor, None] = None,
+    list_metrics: List[_DepthMetric] = list(DEPTH_METRICS),
 ):
     if gt.shape[0] == 0:
         return [torch.nan] * len(DEPTH_METRICS)

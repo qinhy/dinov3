@@ -46,7 +46,7 @@ class IterBasedTrainer:
         train_dataloader: Any,
         val_dataloader: Any,
         criterion: Callable,
-        metrics: list[str],
+        metrics: List[str],
         optimizer: Optimizer,
         scheduler: LRScheduler,
     ):

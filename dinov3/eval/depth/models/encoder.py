@@ -36,7 +36,7 @@ def _get_backbone_out_indices(
     ViT/g (40 blocks): [9, 19, 29, 39]
     """
     n_blocks = getattr(model, "n_blocks", 1)
-    out_indices: list[int]
+    out_indices: List[int]
     if isinstance(backbone_out_layers, (tuple, list)):
         out_indices = list(backbone_out_layers)
     elif backbone_out_layers == BackboneLayersSet.LAST:
@@ -79,7 +79,7 @@ class DinoVisionTransformerWrapper(nn.Module):
 
         # If the backbone does not define embed_dims, use [embed_dim] * n_blocks
         try:
-            embed_dims: list[int] = getattr(self.backbone, "embed_dims")
+            embed_dims: List[int] = getattr(self.backbone, "embed_dims")
         except AttributeError:
             embed_dim: int = getattr(self.backbone, "embed_dim")
             n_blocks: int = getattr(self.backbone, "n_blocks")

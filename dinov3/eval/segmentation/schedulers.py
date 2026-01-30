@@ -5,7 +5,7 @@
 
 from inspect import signature
 import math
-from typing import Any, Literal
+from typing import Any, Literal, Union
 
 import torch
 from packaging.version import Version
@@ -30,7 +30,7 @@ class WarmupOneCycleLR(torch_schedulers.LRScheduler):
     def __init__(
         self,
         optimizer: Optimizer,
-        max_lr: float | None = None,
+        max_lr: Union[float, None] = None,
         total_steps: int = 0,
         warmup_iters: int = 0,
         warmup_ratio: float = 0.0,
@@ -152,7 +152,7 @@ def build_scheduler(
     optimizer: Optimizer,
     lr: float,
     total_iter: int,
-    constructor_kwargs: dict[str, Any],
+    constructor_kwargs: Dict[str, Any],
 ):
     _kwargs = {}
     _kwargs.update(**constructor_kwargs)

@@ -4,7 +4,7 @@
 # the terms of the DINOv3 License Agreement.
 
 from enum import Enum
-from typing import Callable
+from typing import Callable, Union
 
 import numpy as np
 import torch
@@ -235,7 +235,7 @@ class ResizeV2:
 
 
 class FixedCrop(torch.nn.Module):
-    def __init__(self, crop_type: _FixedCropType | str):
+    def __init__(self, crop_type: Union[_FixedCropType, str]):
         super().__init__()
         if isinstance(crop_type, str):
             crop_type = _FixedCropType(crop_type)
@@ -308,15 +308,15 @@ def make_depth_train_transforms(
     normalization_constant: float = 1.0,
     rotation_angle: float = 2.5,
     interpolation=T.InterpolationMode.BILINEAR,
-    img_size: int | tuple[int, int] | None = None,
-    random_crop_size: tuple[int, int] | None = (352, 704),
+    img_size: Union[int, tuple[int, int], None] = None,
+    random_crop_size: Union[tuple[int, int], None] = (352, 704),
     fixed_crop: str = "FULL",
     mean: tuple[float, float, float] = IMAGENET_DEFAULT_MEAN,
     std: tuple[float, float, float] = IMAGENET_DEFAULT_STD,
     brightness_range: tuple[float, float] = (0.9, 1.1),
 ):
     # Fixed geometric transforms
-    transforms_list: list[Callable] = []
+    transforms_list: List[Callable] = []
     transforms_list.append(FixedCrop(_FixedCropType(fixed_crop)))
     if img_size is not None:
         transforms_list.append(
@@ -358,14 +358,14 @@ def make_depth_train_transforms(
 def make_depth_eval_transforms(
     *,
     normalization_constant: float = 1.0,
-    img_size: int | tuple[int, int] | None = None,
+    img_size: Union[int, tuple[int, int], None] = None,
     image_interpolation: T.InterpolationMode = T.InterpolationMode.BILINEAR,
     mean: tuple[float, float, float] = IMAGENET_DEFAULT_MEAN,
     std: tuple[float, float, float] = IMAGENET_DEFAULT_STD,
     fixed_crop: str = "FULL",
     tta: bool = False,
 ):
-    transforms_list: list[Callable] = []
+    transforms_list: List[Callable] = []
     # Apply the fixed evaluation crop
     transforms_list.append(FixedCrop(fixed_crop))
 

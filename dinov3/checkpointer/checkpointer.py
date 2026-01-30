@@ -30,7 +30,7 @@ import subprocess
 import tempfile
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Sequence, Set
+from typing import List, Optional, Sequence, Set, Union
 
 import torch
 import torch.distributed as dist
@@ -73,9 +73,9 @@ class CheckpointRetentionPolicy(Enum):
 
 
 def save_checkpoint(
-    ckpt_dir: str | Path,  # output_dir/ckpt/199
+    ckpt_dir: Union[str,Path],  # output_dir/ckpt/199
     *,
-    iteration: int | str,
+    iteration: Union[int,str],
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer= None,
     overwrite: bool = True,
@@ -133,7 +133,7 @@ def save_checkpoint(
 
 
 def load_checkpoint(
-    ckpt_dir: str | Path,  # output_dir/ckpt/199
+    ckpt_dir: Union[str,Path],  # output_dir/ckpt/199
     *,
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer= None,
@@ -217,7 +217,7 @@ def register_dont_save_hooks(module: torch.nn.Module, dont_save: Sequence[str]):
     module.register_load_state_dict_post_hook(load_state_dict_post_hook)
 
 
-def find_all_checkpoints(ckpt_dir: Path | str) -> list[Path]:
+def find_all_checkpoints(ckpt_dir: Union[Path,str]) -> List[Path]:
     """Find all checkpoints in a directory, i.e. subdirs with integer name. Sorted from first to last."""
     ckpt_dir = Path(ckpt_dir)
     if not ckpt_dir.is_dir():
@@ -227,7 +227,7 @@ def find_all_checkpoints(ckpt_dir: Path | str) -> list[Path]:
     return checkpoints
 
 
-def find_latest_checkpoint(ckpt_dir: Path | str) -> Path:
+def find_latest_checkpoint(ckpt_dir: Union[Path,str]) -> Path:
     """Find the latest checkpoint in a directory, i.e. the subdir with the highest integer name."""
     checkpoints = find_all_checkpoints(ckpt_dir)
     if len(checkpoints) == 0:
@@ -235,7 +235,7 @@ def find_latest_checkpoint(ckpt_dir: Path | str) -> Path:
     return checkpoints[-1]
 
 
-def keep_last_n_checkpoints(ckpt_dir: Path | str, n: int):
+def keep_last_n_checkpoints(ckpt_dir: Union[Path,str], n: int):
     """In a directory with integer-named subdirs, keep only the n subdirs with the highest number."""
     if n is None:
         return
@@ -248,7 +248,7 @@ def keep_last_n_checkpoints(ckpt_dir: Path | str, n: int):
             logger.exception(f"Failed to delete: {ckpt_dir}")
 
 
-def keep_checkpoint_copy(src: Path | str):
+def keep_checkpoint_copy(src: Union[Path,str]):
     """Copy a file/directory next to itself with a _keep suffix. Files are hardlinked."""
     src = Path(src)
     dst = src.parent / f"{src.name}_keep"
@@ -306,7 +306,7 @@ def init_fsdp_model_from_checkpoint(
 
 # Initialize a standard non distributed PyTorch model from PyTorch standard checkpoint for evals
 def init_model_from_checkpoint_for_evals(
-    model: torch.nn.Module, pretrained_weights: str | Path, checkpoint_key: str = None
+    model: torch.nn.Module, pretrained_weights: Union[str,Path], checkpoint_key: str = None
 ):
     state_dict = torch.load(pretrained_weights, map_location="cpu")
     if checkpoint_key is not None and checkpoint_key in state_dict:
