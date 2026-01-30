@@ -9,7 +9,7 @@ import os
 import sys
 from typing import Optional
 
-from termcolor import colored
+# from termcolor import colored
 
 from dinov3.distributed import TorchDistributedEnvironment
 
@@ -42,7 +42,11 @@ class _LevelColoredFormatter(logging.Formatter):
         if index == -1:
             return log
         prefix = log[:index]
-        prefix = colored(prefix, **colored_kwargs)
+        try:
+            from termcolor import colored
+            prefix = colored(prefix, **colored_kwargs)
+        except ImportError:
+            pass
         return prefix + msg
 
 

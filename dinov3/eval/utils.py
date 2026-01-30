@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import torch
 from torch import nn
-from torchmetrics import Metric
+# from torchmetrics import Metric
 
 import dinov3.distributed as distributed
 from dinov3.data import DatasetWithEnumeratedTargets, SamplerType, make_data_loader
@@ -102,7 +102,7 @@ def evaluate(
     model: nn.Module,
     data_loader,
     postprocessors: Dict[str, nn.Module],
-    metrics: Dict[str, Metric],
+    metrics: Dict[str, 'Metric'],
     device: torch.device,
     criterion: Optional[nn.Module] = None,
     accumulate_results: bool = False,
