@@ -130,7 +130,7 @@ def dinov3_vit7b16_dd(
     *,
     pretrained: bool = True,
     weights: Union[DepthWeights , str] = DepthWeights.SYNTHMIX,
-    backbone_weights: Union[BackboneWeights , str] = BackboneWeights.LVD1689M,
+    backbone_weights: Union[BackboneWeights, str] = BackboneWeights.LVD1689M,
     check_hash: bool = False,
     autocast_dtype: torch.dtype = torch.float32,
     **kwargs,
@@ -171,8 +171,8 @@ def _get_chmv2_config(
 
 def dinov3_vitl16_chmv2(
     pretrained: bool = True,
-    weights: DepthWeights | str = DepthWeights.CHMV2,
-    backbone_weights: BackboneWeights | str = BackboneWeights.SAT493M,
+    weights: Union[DepthWeights, str] = DepthWeights.CHMV2,
+    backbone_weights: Union[BackboneWeights, str] = BackboneWeights.SAT493M,
     check_hash: bool = False,
     autocast_dtype: torch.dtype = torch.float32,
     **kwargs,
